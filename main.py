@@ -1,33 +1,24 @@
-﻿from modules.db import create_users_table, drop_users_table, fetch_users
-from modules.users import User
-from modules.products import Product
+﻿from database import engine
+from modules.finance import Base, add_account, add_entry, get_account_balance
+import datetime
 
-def main():
-    print('Diplom Project ERP-система запущена')
+# створюємо таблиці у базі
+Base.metadata.create_all(bind=engine)
 
-    # 1. Створюємо таблицю users
-    drop_users_table()
-    create_users_table()
+# створюємо рахунки
+cash = add_account("30", "Cash", "актив")
+revenue = add_account("70", "Revenue", "дохід")
 
-    # 2. Створюємо користувачів
-    user1 = User('admin', 'superuser')
-    user2 = User('manager', 'staff')
-    print(user1)
-    print(user2)
+# додаємо проводку: надходження готівки від доходу
+add_entry(
+    date=datetime.date.today(),
+    description="Продаж товару за готівку",
+    lines=[
+        {"account_id": cash.id, "debit": 1000, "credit": 0},
+        {"account_id": revenue.id, "debit": 0, "credit": 1000}
+    ]
+)
 
-    # 3. Вибірка всіх користувачів
-    print("Список користувачів у базі:")
-    fetch_users()
-
-    # 4. Оновлення користувача
-    user1.update(user_id=1, role='manager')
-
-    # 5. Видалення користувача
-    user2.delete(user_id=2)
-
-    # 6. Створюємо продукт
-    product = Product('Laptop', 25000, 10)
-    print(product)
-
-if __name__ == '__main__':
-    main()
+# виводимо баланси
+print("Баланс Cash:", get_account_balance(cash.id))
+print("Баланс Revenue:", get_account_balance(revenue.id))

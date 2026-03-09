@@ -1,45 +1,46 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Numeric
-from sqlalchemy.orm import relationship, declarative_base
-from database import SessionLocal
-import datetime
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy.orm import declarative_base, relationship, Session
+from database import engine, SessionLocal
 
 Base = declarative_base()
 
 class Account(Base):
     __tablename__ = "accounts"
-    id = Column(Integer, primary_key=True)
-    code = Column(String, nullable=False)
-    name = Column(String, nullable=False)
-    type = Column(String, nullable=False)
-
-class Entry(Base):
-    __tablename__ = "entries"
-    id = Column(Integer, primary_key=True)
-    date = Column(Date, nullable=False)
-    description = Column(String)
-    lines = relationship("EntryLine", back_populates="entry")
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String, unique=True)
+    name = Column(String)
+    type = Column(String)
 
 class EntryLine(Base):
     __tablename__ = "entry_lines"
-    id = Column(Integer, primary_key=True)
-    entry_id = Column(Integer, ForeignKey("entries.id"))
+    id = Column(Integer, primary_key=True, index=True)
     account_id = Column(Integer, ForeignKey("accounts.id"))
-    debit = Column(Numeric(12,2), default=0)
-    credit = Column(Numeric(12,2), default=0)
-    entry = relationship("Entry", back_populates="lines")
+    debit = Column(Integer, default=0)
+    credit = Column(Integer, default=0)
     account = relationship("Account")
 
 def add_account(code, name, type):
-    s = SessionLocal(); a = Account(code=code, name=name, type=type)
-    s.add(a); s.commit(); s.refresh(a); s.close(); return a
+    db = SessionLocal()
+    account = db.query(Account).filter_by(code=code).first()
+    if not account:
+        account = Account(code=code, name=name, type=type)
+        db.add(account)
+        db.commit()
+        db.refresh(account)
+    db.close()
+    return account
 
 def add_entry(date, description, lines):
-    s = SessionLocal(); e = Entry(date=date, description=description)
-    s.add(e); s.commit()
-    for l in lines: s.add(EntryLine(entry_id=e.id, account_id=l["account_id"], debit=l.get("debit",0), credit=l.get("credit",0)))
-    s.commit(); s.refresh(e); s.close(); return e
+    db = SessionLocal()
+    for line in lines:
+        entry_line = EntryLine(account_id=line["account_id"], debit=line["debit"], credit=line["credit"])
+        db.add(entry_line)
+    db.commit()
+    db.close()
 
 def get_account_balance(account_id):
-    s = SessionLocal()
-    lines = s.query(EntryLine).filter_by(account_id=account_id).all()
-    s.close(); return sum(l.debit for l in lines) - sum(l.credit for l in lines)
+    db = SessionLocal()
+    debit = sum(l.debit for l in db.query(EntryLine).filter_by(account_id=account_id))
+    credit = sum(l.credit for l in db.query(EntryLine).filter_by(account_id=account_id))
+    db.close()
+    return debit - credit

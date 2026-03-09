@@ -1,4 +1,6 @@
-﻿pandas
-numpy
+﻿ fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pandas
 matplotlib
-scikit-learn

@@ -8,9 +8,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql   # ← важливо: тепер монтуємо /var/lib/postgresql
+      - db_data:/var/lib/postgresql
+      - ./certs:/var/lib/postgresql/certs:ro   # ← монтуємо сертифікати
     networks:
       - erp_network
+    command: >
+      postgres -c ssl=on
+               -c ssl_cert_file=/var/lib/postgresql/certs/server.crt
+               -c ssl_key_file=/var/lib/postgresql/certs/server.key
 
   backend:
     build: .

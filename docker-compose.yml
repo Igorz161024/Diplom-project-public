@@ -5,17 +5,14 @@ services:
     restart: always
     env_file:
       - .env.prod
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql
-      - ./certs:/var/lib/postgresql/certs:ro   # ← монтуємо сертифікати
+      - db_data:/var/lib/postgresql/data
     networks:
       - erp_network
-    command: >
-      postgres -c ssl=on
-               -c ssl_cert_file=/var/lib/postgresql/certs/server.crt
-               -c ssl_key_file=/var/lib/postgresql/certs/server.key
 
   backend:
     build: .

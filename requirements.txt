@@ -1,6 +1,9 @@
-﻿ fastapi
+﻿fastapi
 uvicorn
 sqlalchemy
 psycopg2-binary
 pandas
 matplotlib
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart

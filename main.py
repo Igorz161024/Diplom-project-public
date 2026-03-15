@@ -1,23 +1,45 @@
-﻿from fastapi import FastAPI
+﻿from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import StreamingResponse
 from database import engine
 from modules.finance import Base, get_account_balance, add_account, add_entry
+from auth import create_access_token, oauth2_scheme
+
 import datetime
 import pandas as pd
 import io
 import matplotlib.pyplot as plt
-from fastapi.responses import StreamingResponse
+from datetime import datetime, timedelta
+from jose import jwt, JWTError
+from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException
+
+from fastapi import Depends, Form
+from auth import create_access_token, oauth2_scheme, verify_token
 
 app = FastAPI()
 
 # створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
+@app.post("/token")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    if form_data.username != "admin" or form_data.password != "1234":
+        raise HTTPException(status_code=400, detail="Невірний логін або пароль")
+    access_token = create_access_token(data={"sub": form_data.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
 @app.get("/")
 def read_root():
     return {"message": "ERP backend працює!"}
 
 @app.post("/add_entry")
-def create_entry(amount: int, description: str = "Продаж товару за готівку"):
+def create_entry(
+    amount: int,
+    description: str = "Продаж товару за готівку",
+    token: str = Depends(oauth2_scheme)   # захист через JWT
+):
     cash = add_account("30", "Cash", "актив")
     revenue = add_account("70", "Revenue", "дохід")
 

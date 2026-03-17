@@ -51,17 +51,17 @@
 ### Changelog
 Детальний список змін дивись у файлі CHANGELOG.md
 
-PS C:\Users\igorz\Projects\Diplom-project> git checkout c5a5f4dcc164fdad5b0dd6fcff5d6329b2ead59e -- README.md
-PS C:\Users\igorz\Projects\Diplom-project> git add README.md
-PS C:\Users\igorz\Projects\Diplom-project> git commit -m "Restore original academic description in README.md"
-On branch master
-Your branch is ahead of 'public/master' by 13 commits.
-  (use "git push" to publish your local commits)
+ 
 
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   main.py
+### Оновлення (15 березня 2026)
 
-no changes added to commit (use "git add" and/or "git commit -a")
-PS C:\Users\igorz\Projects\Diplom-project> git push both master
+#### Fixed
+- Виправлено 9 помилок у конфігурації Docker та бекенду, що забезпечило стабільність роботи контейнерів.
+- Усунено проблеми з підключенням до бази даних PostgreSQL.
+- Відновлено коректну роботу ендпоінтів FastAPI (/ та /add_entry).
+- Налагоджено відображення даних у PowerShell без помилок кодування.
+
+#### Результат
+- Система працює стабільно після усунення критичних помилок.
+- Бекенд і база даних синхронізуються без збоїв.
+- Docker‑контейнери запускаються та працюють відтворювано.

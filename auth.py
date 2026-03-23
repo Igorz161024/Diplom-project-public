@@ -18,14 +18,31 @@ def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    """
+    Створює JWT токен з даними користувача.
+    У data можна передати {"sub": user_id, "role": "accountant"} або іншу роль.
+    """
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def verify_token(token: str):
+    """
+    Перевіряє токен і повертає payload.
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+def get_current_user_role(token: str = Depends(oauth2_scheme)):
+    """
+    Витягує роль користувача з токена.
+    """
+    payload = verify_token(token)
+    role = payload.get("role")
+    if role is None:
+        raise HTTPException(status_code=403, detail="Role not found in token")
+    return role

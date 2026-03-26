@@ -32,6 +32,8 @@ jobs:
 
   backend:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -48,6 +50,11 @@ jobs:
       - name: Run tests
         run: pytest
         working-directory: ./backend
+
+      - name: Check GITHUB_TOKEN
+        run: echo "Token length: ${#GITHUB_TOKEN}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
         run: docker build -t erp_backend:latest .

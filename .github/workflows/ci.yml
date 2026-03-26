@@ -1,0 +1,54 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build React project
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Run tests
+        run: npm test -- --watchAll=false
+        working-directory: ./frontend
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        working-directory: ./backend
+
+      - name: Run tests
+        run: pytest
+        working-directory: ./backend
+
+      - name: Build Docker image
+        run: docker build -t erp_backend:latest .
+        working-directory: ./backend

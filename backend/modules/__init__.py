@@ -1,4 +1,4 @@
-﻿# backend/modules/__init__.py
+# backend/modules/__init__.py
 from .finance import *
 from .users import *
 from .products import *

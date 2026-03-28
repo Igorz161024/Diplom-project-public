@@ -2,8 +2,8 @@ from models import Base, Account, Entry
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# Підключення до PostgreSQL (користувач postgres, пароль ****)
-engine = create_engine("postgresql+psycopg2://postgres:****@localhost:5432/finance_db")
+# Підключення до PostgreSQL (користувач postgres, пароль 4568)
+engine = create_engine("postgresql+psycopg2://postgres:4568@localhost:5432/finance_db")
 
 # Створення таблиць у базі
 Base.metadata.create_all(engine)

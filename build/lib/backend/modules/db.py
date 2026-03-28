@@ -5,7 +5,7 @@ def get_connection():
     return psycopg2.connect(
         dbname="erp_diplom",
         user="postgres",
-        password="****",
+        password="4568",
         host="localhost",
         port="5432"
     )

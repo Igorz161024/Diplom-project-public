@@ -1,0 +1,2 @@
+[console_scripts]
+erp_diplom = main:app

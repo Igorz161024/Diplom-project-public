@@ -137,3 +137,8 @@
 ### Security
 - `.gitignore` блокує `.env.dev`, `.env.prod` та `config/.env`.
 - Перевірено, що секрети не потрапляють у публічний репозиторій.
+## [2026-03-28]
+
+### Changed
+- Перейменовано основну гілку з `Владелец` на `owner`.
+- Оновлено remote‑структуру: тепер використовується `private` (Diplom-project) та `public` (Diplom-project-public).

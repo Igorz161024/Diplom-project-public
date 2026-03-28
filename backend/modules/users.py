@@ -1,4 +1,4 @@
-﻿from modules.db import insert_user, update_user, delete_user
+﻿from backend.modules.db import insert_user, update_user, delete_user
 class User:
     def __init__(self, username, role):
         # Ініціалізація атрибутів класу

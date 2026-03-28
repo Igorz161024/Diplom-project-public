@@ -1,9 +1,12 @@
 ﻿from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import StreamingResponse
-from database import engine
-from modules.finance import Base, get_account_balance, add_account, add_entry
-from auth import create_access_token, get_current_user_role
+
+from backend.database import engine
+from backend.modules.finance import Base, get_account_balance, add_account, add_entry
+from backend.auth import create_access_token, get_current_user_role
+from backend.modules.users import User   # приклад
+from backend.modules.products import Product   # приклад
 
 import datetime
 import pandas as pd

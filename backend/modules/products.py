@@ -1,4 +1,4 @@
-﻿from modules.db import insert_product, update_product, delete_product
+﻿from backend.modules.db import insert_product, update_product, delete_product
 
 class Product:
     def __init__(self, name, price, quantity):

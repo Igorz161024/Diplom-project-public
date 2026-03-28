@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship, Session
-from database import engine, SessionLocal
-
+from backend.database import engine, SessionLocal
 Base = declarative_base()
 
 class Account(Base):

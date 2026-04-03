@@ -14,3 +14,5 @@ git push public Владелец
 
 Write-Output "Зміни збережено на GitHub (приватний та публічний репозиторії)"
 git status
+
+

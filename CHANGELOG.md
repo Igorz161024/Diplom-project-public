@@ -177,3 +177,19 @@
 - Переписано git-save.ps1: залишено лише пуш у origin/master
 - Видалено команди для гілок owner та Владелец
 - Стандартизовано remote: залишено лише origin
+## [2026-04-11]
+
+### Added
+- Додано компонент JournalTable у frontend/src/components.
+- Додано стилі journal.css для операцій журналу.
+
+### Changed
+- Оновлено App.js для інтеграції JournalTable.
+- Оновлено package.json та package-lock.json після додавання нового компонента.
+
+### Fixed
+- Виправлено конфігурацію git-save.ps1 після чистки гілок.
+- Оновлено CHANGELOG для узгодження з новим стандартом комітів.
+
+### Security
+- Перевірено .gitignore для виключення node_modules, build та .env файлів.

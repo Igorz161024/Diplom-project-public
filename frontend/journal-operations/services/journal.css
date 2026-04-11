@@ -1,0 +1,84 @@
+.journal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.journal-table th,
+.journal-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.journal-table th {
+  font-weight: bold;
+}
+
+.journal-table.dark {
+  background-color: #121212;
+  color: #fff;
+}
+
+.journal-table.dark th {
+  background-color: #1e1e1e;
+}
+
+.journal-table.light {
+  background-color: #fff;
+  color: #000;
+}
+
+.journal-table.light th {
+  background-color: #f2f2f2;
+}
+
+.journal-table tr:hover {
+  background-color: #e0e0e0;
+}
+
+.journal-table td:first-child {
+  font-style: italic;
+}
+
+.journal-table td:last-child {
+  text-align: right;
+}
+
+.journal-table caption {
+  caption-side: top;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.journal-table thead {
+  border-bottom: 2px solid #666;
+}
+
+.journal-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.journal-table.dark tbody tr:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+.journal-table td.highlight {
+  background-color: #ffeb3b;
+}
+
+.journal-table td.error {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.journal-table td.success {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.journal-table td.warning {
+  background-color: #ff9800;
+  color: #fff;
+}

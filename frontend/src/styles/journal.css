@@ -1,0 +1,27 @@
+.journal-table {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.journal-table.dark {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.journal-table.light {
+  background-color: #f9f9f9;
+  color: #000000;
+}
+
+.journal-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.journal-table th, .journal-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}

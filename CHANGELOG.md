@@ -193,3 +193,31 @@
 
 ### Security
 - Перевірено .gitignore для виключення node_modules, build та .env файлів.
+## [Unreleased]
+
+### Added
+- Створено файл `.env.prod` для конфігурації PostgreSQL (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB).
+- Додано підтримку запуску контейнерів через docker-compose.
+
+### Changed
+- Оновлено інструкції для запуску ERP‑проєкту у WSL2 (Node.js, npm, Docker, PostgreSQL).
+
+### Fixed
+- Виправлено помилку запуску контейнерів через відсутність `.env.prod`.
+
+### Security
+- Пароль для PostgreSQL збережено у `.env.prod` замість відкритого використання у `docker-compose.yml`.
+## [Unreleased]
+
+### Added
+- Створено файл `.env.prod` для конфігурації PostgreSQL (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB).
+- Додано підтримку запуску контейнерів через docker-compose.
+
+### Changed
+- Оновлено інструкції для запуску ERP‑проєкту у WSL2 (Node.js, npm, Docker, PostgreSQL).
+
+### Fixed
+- Виправлено помилку запуску контейнерів через відсутність `.env.prod`.
+
+### Security
+- Пароль для PostgreSQL винесено у `.env.prod` замість відкритого використання у `docker-compose.yml`.

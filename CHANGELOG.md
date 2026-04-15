@@ -221,3 +221,10 @@
 
 ### Security
 - Пароль для PostgreSQL винесено у `.env.prod` замість відкритого використання у `docker-compose.yml`.
+## [2026-04-15]
+### Added
+- Створено файл .env.prod у корені проєкту для запуску ERP-системи
+### Changed
+- Налаштовано docker-compose для використання .env.prod
+### Fixed
+- Виправлено помилку "env file not found" при запуску контейнерів

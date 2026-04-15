@@ -15,7 +15,9 @@ services:
       - erp_network
 
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: erp_backend
     restart: always
     depends_on:

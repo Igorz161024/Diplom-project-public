@@ -5,3 +5,7 @@ __pycache__/
 *.pyd
 *.swp
 .env
+*.log
+node_modules/
+dist/
+build/

@@ -228,3 +228,10 @@
 - Налаштовано docker-compose для використання .env.prod
 ### Fixed
 - Виправлено помилку "env file not found" при запуску контейнерів
+# CHANGELOG
+
+## [2026-04-15]
+- Додано файл .env.prod
+- Оновлено backend (auth, database, main)
+- Додано .gitattributes
+- Оновлено CHANGELOG.md

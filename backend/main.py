@@ -1,7 +1,7 @@
 ﻿from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import StreamingResponse
-
+from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from backend.database import engine
 from backend.modules.finance import Base, get_account_balance, add_account, add_entry
 from backend.auth import create_access_token, get_current_user_role
@@ -12,8 +12,19 @@ import datetime
 import pandas as pd
 import io
 import matplotlib.pyplot as plt
+import psycopg2
+import os
 
 app = FastAPI()
+
+# ✅ Додаємо CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # можна вказати конкретно ["http://localhost:3000", "http://localhost:3006"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
@@ -33,9 +44,25 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = create_access_token({"sub": form_data.username, "role": role})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get("/")
-def read_root():
-    return {"message": "ERP backend працює!"}
+# Ендпоінт для журналу операцій (Postgres)
+def get_connection():
+    return psycopg2.connect(
+        dbname=os.getenv("POSTGRES_DB"),
+        user=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+        host="db",   # ім'я сервісу Postgres у docker-compose
+        port="5432"
+    )
+
+@app.get("/api/journal")
+def read_journal():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT date, operation, status FROM journal ORDER BY date;")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [{"date": str(r[0]), "operation": r[1], "status": r[2]} for r in rows]
 
 # Ендпоінт для бухгалтерів
 @app.get("/finance")

@@ -10,6 +10,7 @@
     "@mui/material": "^5.18.0",
     "@mui/x-data-grid": "^5.17.26",
     "express": "^5.2.1",
+    "path-browserify": "^1.0.1",
     "react-router-dom": "^7.13.2",
     "react-scripts": "^5.0.1"
   },

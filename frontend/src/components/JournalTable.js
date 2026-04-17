@@ -7,11 +7,17 @@ const JournalTable = () => {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    setRows([
-      { id: 1, date: "2026-04-10", operation: "Створення запису", status: "success" },
-      { id: 2, date: "2026-04-11", operation: "Оновлення даних", status: "warning" },
-      { id: 3, date: "2026-04-12", operation: "Видалення запису", status: "error" },
-    ]);
+    fetch("http://localhost:8000/api/journal")
+      .then(res => res.json())
+      .then(data => {
+        const rowsWithId = data.map((row, index) => ({
+          id: index + 1,
+          ...row
+        }));
+        setRows(rowsWithId);
+        console.log("Отримані рядки:", rowsWithId);
+      })
+      .catch(err => console.error("Помилка завантаження журналу:", err));
   }, []);
 
   const columns = [
@@ -25,6 +31,8 @@ const JournalTable = () => {
       <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
         Перемкнути тему
       </button>
+
+      {/* HTML-таблиця */}
       <table className={`journal-table ${theme}`}>
         <caption>Журнал операцій</caption>
         <thead>
@@ -44,8 +52,17 @@ const JournalTable = () => {
           ))}
         </tbody>
       </table>
+
+      {/* DataGrid */}
       <div style={{ height: 400, width: "100%", marginTop: "20px" }}>
-        <DataGrid rows={rows} columns={columns} pageSize={5} />
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 5 } },
+          }}
+          pageSizeOptions={[5]}
+        />
       </div>
     </div>
   );

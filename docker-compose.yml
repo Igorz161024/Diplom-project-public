@@ -31,9 +31,24 @@ services:
     networks:
       - erp_network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: erp_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - erp_network
+
 volumes:
   db_data:
 
 networks:
   erp_network:
     driver: bridge
+
+

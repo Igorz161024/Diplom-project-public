@@ -295,3 +295,8 @@
 - Запущено контейнер `erp_frontend` разом із `erp_backend` та `erp_db`
 - Перевірено роботу nginx з локальним конфігом `frontend/nginx/default.conf`
 - React/Material UI білд завершився успішно (`Compiled successfully`)
+## [2026-04-21] Build & Network Fixes
+- Пересоздано мережу diplom-project_erp_network (enable_ipv4 / enable_ipv6).
+- Повна збірка backend (Python 3.12-slim) та frontend (Node 18-alpine + Nginx).
+- Оптимізовано Dockerfile: requirements.txt → pip install, npm install → npm run build.
+- Контейнери erp_db, erp_backend, erp_frontend успішно підняті у WSL2 без Docker Desktop.

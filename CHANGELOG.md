@@ -300,3 +300,9 @@
 - Повна збірка backend (Python 3.12-slim) та frontend (Node 18-alpine + Nginx).
 - Оптимізовано Dockerfile: requirements.txt → pip install, npm install → npm run build.
 - Контейнери erp_db, erp_backend, erp_frontend успішно підняті у WSL2 без Docker Desktop.
+### 2026-04-21
+- Додано компонент ProtectedRoute.jsx для захисту маршрутів за ролями
+- Оновлено App.jsx: додано маршрути для Finance, HR, Admin, Products, PKash
+- Створено нові модулі: Inventory.jsx, Purchases.jsx, Sales.jsx, Legal.jsx
+- Оновлено App.jsx: додано маршрути для Inventory, Purchases, Sales, Legal
+- Підготовлено план робіт для бекенду (API ендпоінти та ролі)

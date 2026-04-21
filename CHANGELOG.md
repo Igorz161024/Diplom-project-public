@@ -283,3 +283,15 @@
 ### ERP Project Progress
 - Фронтенд стабільно працює як SPA.
 - Конфігурація тепер зберігається у вихідних файлах проєкту.
+## [2026-04-21] Frontend build & ERP modules
+
+- Додано базові компоненти-заглушки для модулів ERP:
+  - Finance (Фінанси)
+  - HR (Відділ кадрів)
+  - Admin (Адміністратор)
+  - Products (Продукти)
+  - PKash (Каса)
+- Успішно пересобрано образ фронтенду через `docker-compose build frontend`
+- Запущено контейнер `erp_frontend` разом із `erp_backend` та `erp_db`
+- Перевірено роботу nginx з локальним конфігом `frontend/nginx/default.conf`
+- React/Material UI білд завершився успішно (`Compiled successfully`)

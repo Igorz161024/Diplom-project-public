@@ -1,11 +1,65 @@
-.git
+# Локальні конфігураційні файли
+.env
+.env.prod
+.env.dev
+env-dev
+env-prod
+
+# Кеш і тимчасові файли
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.swp
-.env
+
+# Логи
 *.log
+
+# IDE та редактори
+.vscode/
+.idea/
+
+# Node.js
 node_modules/
-dist/
+npm-debug.log
+yarn-error.log
+
+# Python build
+*.egg-info/
+.eggs/
 build/
+dist/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Системні файли Windows/WSL
+Thumbs.db
+Desktop.ini
+
+# Бінарні артефакти та архіви
+*.exe
+*.dll
+*.so
+*.dylib
+*.zip
+*.tar
+*.gz
+*.7z
+*.rar
+
+# Бази даних та дампи
+*.sql
+*.sqlite
+*.db
+*.bak
+
+# Тимчасові каталоги
+uploads/
+dumps/
+tmp/

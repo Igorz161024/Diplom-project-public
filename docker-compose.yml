@@ -8,9 +8,9 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./db_data:/var/lib/postgresql/data
     networks:
       - erp_network
 
@@ -44,11 +44,26 @@ services:
     networks:
       - erp_network
 
-volumes:
-  db_data:
+  backup:
+    image: postgres:18
+    container_name: erp_backup
+    restart: always
+    env_file:
+      - .env.prod
+    volumes:
+      - ./backups:/backups
+    networks:
+      - erp_network
+    entrypoint: >
+      bash -c "while true; do
+        pg_dump -h db -U postgres -d erp_diplom > /backups/erp_diplom_$(date +%F_%H-%M).sql;
+        sleep 86400;
+      done"
 
 networks:
   erp_network:
     driver: bridge
+
+
 
 

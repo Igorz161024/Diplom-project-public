@@ -306,3 +306,19 @@
 - Створено нові модулі: Inventory.jsx, Purchases.jsx, Sales.jsx, Legal.jsx
 - Оновлено App.jsx: додано маршрути для Inventory, Purchases, Sales, Legal
 - Підготовлено план робіт для бекенду (API ендпоінти та ролі)
+## [2026-04-21] Backend Routers Init
+- Створено базові роутери FastAPI:
+  - /api/finance
+  - /api/inventory
+  - /api/purchases
+  - /api/sales
+  - /api/legal
+- Додано мінімальні Pydantic‑моделі (FinanceEntry, InventoryItem, PurchaseContract, SaleRecord, LegalDoc).
+- Підключено роутери у main.py.
+- Додано заглушки JSON для тестових запитів.
+- External Postgres port changed from 5432 to 5433
+## [2026-04-23]
+- Додано нові роутери у FastAPI: Finance, Inventory, Purchases, Sales, Legal
+- Створено мінімальні Pydantic‑моделі для кожного модуля
+- Підключено всі роутери у main.py
+- Додано заглушки JSON для тестових ендпоінтів

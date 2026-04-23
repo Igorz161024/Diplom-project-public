@@ -1,12 +1,19 @@
 ﻿from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from backend.database import engine
 from backend.modules.finance import Base, get_account_balance, add_account, add_entry
 from backend.auth import create_access_token, get_current_user_role
 from backend.modules.users import User   # приклад
 from backend.modules.products import Product   # приклад
+
+# нові роутери
+from backend.finance_router import router as finance_router
+from backend.inventory_router import router as inventory_router
+from backend.purchases_router import router as purchases_router
+from backend.sales_router import router as sales_router
+from backend.legal_router import router as legal_router
 
 import datetime
 import pandas as pd
@@ -15,12 +22,16 @@ import matplotlib.pyplot as plt
 import psycopg2
 import os
 
-app = FastAPI()
+app = FastAPI(
+    title="ERP Diplom Project",
+    description="Backend API для фінансів, інвентаризації, закупівель, продажів та юридичних документів",
+    version="1.0.0"
+)
 
 # ✅ Додаємо CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # можна вказати конкретно ["http://localhost:3000", "http://localhost:3006"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,6 +39,13 @@ app.add_middleware(
 
 # створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
+
+# 🔗 Підключаємо нові роутери
+app.include_router(finance_router, prefix="/api/finance", tags=["Finance"])
+app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"])
+app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
+app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
+app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
 
 # Логін з різними ролями
 @app.post("/token")
@@ -50,7 +68,7 @@ def get_connection():
         dbname=os.getenv("POSTGRES_DB"),
         user=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
-        host="db",   # ім'я сервісу Postgres у docker-compose
+        host="db",
         port="5432"
     )
 

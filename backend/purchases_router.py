@@ -1,16 +1,14 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/purchases", tags=["Purchases"])
+router = APIRouter(tags=["Purchases"])
 
-# 🔹 Модель для закупівель
 class Purchase(BaseModel):
     date: str
     supplier: str
     amount: int
     desc: str
 
-# 🔹 Заглушка JSON для тесту
 @router.get("/")
 def get_purchases():
     return [
@@ -21,3 +19,4 @@ def get_purchases():
             "desc": "Закупівля сировини"
         }
     ]
+

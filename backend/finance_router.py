@@ -1,9 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-router = APIRouter()
+router = APIRouter(tags=["Finance"])
 
-# 🔹 Модель для фінансових операцій
 class FinanceEntry(BaseModel):
     date: str
     debit: str
@@ -11,7 +10,6 @@ class FinanceEntry(BaseModel):
     amount: int
     desc: str
 
-# 🔹 Заглушка JSON для тесту
 @router.get("/")
 def get_finance():
     return [
@@ -23,4 +21,5 @@ def get_finance():
             "desc": "Імпорт товару"
         }
     ]
+
 

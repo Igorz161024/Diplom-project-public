@@ -1,15 +1,13 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-router = APIRouter()
+router = APIRouter(tags=["Inventory"])
 
-# 🔹 Модель для інвентаризації
 class InventoryItem(BaseModel):
     product: str
     quantity: int
     batch: str
 
-# 🔹 Заглушка JSON для тесту
 @router.get("/")
 def get_inventory():
     return [
@@ -19,4 +17,5 @@ def get_inventory():
             "batch": "2026-04-21"
         }
     ]
+
 

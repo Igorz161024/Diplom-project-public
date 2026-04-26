@@ -20,7 +20,6 @@ import pandas as pd
 import io
 import matplotlib.pyplot as plt
 import psycopg2
-import os
 
 app = FastAPI(
     title="ERP Diplom Project",
@@ -47,7 +46,7 @@ app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"]
 app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
 app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
 
-# Логін з різними ролями
+# Логін з різними ролями (9 ролей)
 @app.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if form_data.username == "admin" and form_data.password == "1234":
@@ -56,18 +55,30 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         role = "accountant"
     elif form_data.username == "hr" and form_data.password == "1234":
         role = "hr"
+    elif form_data.username == "products" and form_data.password == "1234":
+        role = "products"
+    elif form_data.username == "pkash" and form_data.password == "1234":
+        role = "pkash"
+    elif form_data.username == "inventory" and form_data.password == "1234":
+        role = "inventory"
+    elif form_data.username == "purchases" and form_data.password == "1234":
+        role = "purchases"
+    elif form_data.username == "sales" and form_data.password == "1234":
+        role = "sales"
+    elif form_data.username == "legal" and form_data.password == "1234":
+        role = "legal"
     else:
         raise HTTPException(status_code=400, detail="Невірний логін або пароль")
 
     access_token = create_access_token({"sub": form_data.username, "role": role})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "role": role}
 
 # Ендпоінт для журналу операцій (Postgres)
 def get_connection():
     return psycopg2.connect(
-        dbname=os.getenv("POSTGRES_DB"),
-        user=os.getenv("POSTGRES_USER"),
-        password=os.getenv("POSTGRES_PASSWORD"),
+        dbname="erp_diplom",
+        user="postgres",
+        password="4568",
         host="db",
         port="5432"
     )
@@ -82,26 +93,60 @@ def read_journal():
     conn.close()
     return [{"date": str(r[0]), "operation": r[1], "status": r[2]} for r in rows]
 
-# Ендпоінт для бухгалтерів
+# Ендпоінти для ролей
 @app.get("/finance")
 def read_finance(role: str = Depends(get_current_user_role)):
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
     return {"msg": "Finance data visible"}
 
-# Ендпоінт для кадровиків
 @app.get("/hr")
 def read_hr(role: str = Depends(get_current_user_role)):
     if role not in ["hr", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
     return {"msg": "HR data visible"}
 
-# Ендпоінт для директора (адміна)
 @app.get("/admin")
 def read_admin(role: str = Depends(get_current_user_role)):
     if role != "admin":
         raise HTTPException(status_code=403, detail="Admins only")
     return {"msg": "Admin panel visible"}
+
+@app.get("/products")
+def read_products(role: str = Depends(get_current_user_role)):
+    if role not in ["products", "admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return {"msg": "Products data visible"}
+
+@app.get("/pkash")
+def read_pkash(role: str = Depends(get_current_user_role)):
+    if role not in ["pkash", "admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return {"msg": "PKash data visible"}
+
+@app.get("/inventory")
+def read_inventory(role: str = Depends(get_current_user_role)):
+    if role not in ["inventory", "admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return {"msg": "Inventory data visible"}
+
+@app.get("/purchases")
+def read_purchases(role: str = Depends(get_current_user_role)):
+    if role not in ["purchases", "admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return {"msg": "Purchases data visible"}
+
+@app.get("/sales")
+def read_sales(role: str = Depends(get_current_user_role)):
+    if role not in ["sales", "admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return {"msg": "Sales data visible"}
+
+@app.get("/legal")
+def read_legal(role: str = Depends(get_current_user_role)):
+    if role not in ["legal", "admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return {"msg": "Legal data visible"}
 
 # Додавання проводки (захищено токеном)
 @app.post("/add_entry")
@@ -171,4 +216,4 @@ def plot_report(role: str = Depends(get_current_user_role)):
     plt.savefig(buf, format="png")
     buf.seek(0)
 
-    return StreamingResponse(buf, media_type="image/png")
+    return

@@ -54,16 +54,8 @@ services:
       - ./backups:/backups
     networks:
       - erp_network
-    entrypoint: >
-      bash -c "while true; do
-        pg_dump -h db -U postgres -d erp_diplom > /backups/erp_diplom_$(date +%F_%H-%M).sql;
-        sleep 86400;
-      done"
+    entrypoint: ["bash", "-c", "while true; do pg_dump -h db -U postgres -d erp_diplom > /backups/erp_diplom_\\$(date +%F_%H-%M).sql; sleep 86400; done"]
 
 networks:
   erp_network:
     driver: bridge
-
-
-
-

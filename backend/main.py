@@ -84,14 +84,19 @@ def get_connection():
     )
 
 @app.get("/api/journal")
-def read_journal():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT date, operation, status FROM journal ORDER BY date;")
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-    return [{"date": str(r[0]), "operation": r[1], "status": r[2]} for r in rows]
+def get_journal():
+    records = []
+    with conn.cursor() as cur:
+        cur.execute("SELECT date, operation, status, amount FROM journal ORDER BY id;")
+        for row in cur.fetchall():
+            records.append({
+                "date": str(row[0]),
+                "operation": row[1],
+                "status": row[2],
+                "amount": row[3]
+            })
+    return JSONResponse(content=records, media_type="application/json; charset=utf-8")
+
 
 # Ендпоінти для ролей
 @app.get("/finance")

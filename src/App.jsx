@@ -25,7 +25,7 @@ export default function App() {
         <Route
           path="/finance"
           element={
-            <ProtectedRoute role="Finance">
+            <ProtectedRoute requiredRole="Finance" currentRole={role}>
               <Finance />
             </ProtectedRoute>
           }
@@ -33,7 +33,7 @@ export default function App() {
         <Route
           path="/hr"
           element={
-            <ProtectedRoute role="HR">
+            <ProtectedRoute requiredRole="HR" currentRole={role}>
               <HR />
             </ProtectedRoute>
           }
@@ -41,7 +41,7 @@ export default function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute role="Admin">
+            <ProtectedRoute requiredRole="Admin" currentRole={role}>
               <Admin />
             </ProtectedRoute>
           }
@@ -49,7 +49,7 @@ export default function App() {
         <Route
           path="/products"
           element={
-            <ProtectedRoute role="Products">
+            <ProtectedRoute requiredRole="Products" currentRole={role}>
               <Products />
             </ProtectedRoute>
           }
@@ -57,7 +57,7 @@ export default function App() {
         <Route
           path="/pkash"
           element={
-            <ProtectedRoute role="PKash">
+            <ProtectedRoute requiredRole="PKash" currentRole={role}>
               <PKash />
             </ProtectedRoute>
           }
@@ -65,7 +65,7 @@ export default function App() {
         <Route
           path="/inventory"
           element={
-            <ProtectedRoute role="Inventory">
+            <ProtectedRoute requiredRole="Inventory" currentRole={role}>
               <Inventory />
             </ProtectedRoute>
           }
@@ -73,7 +73,7 @@ export default function App() {
         <Route
           path="/purchases"
           element={
-            <ProtectedRoute role="Purchases">
+            <ProtectedRoute requiredRole="Purchases" currentRole={role}>
               <Purchases />
             </ProtectedRoute>
           }
@@ -81,7 +81,7 @@ export default function App() {
         <Route
           path="/sales"
           element={
-            <ProtectedRoute role="Sales">
+            <ProtectedRoute requiredRole="Sales" currentRole={role}>
               <Sales />
             </ProtectedRoute>
           }
@@ -89,7 +89,7 @@ export default function App() {
         <Route
           path="/legal"
           element={
-            <ProtectedRoute role="Legal">
+            <ProtectedRoute requiredRole="Legal" currentRole={role}>
               <Legal />
             </ProtectedRoute>
           }
@@ -98,5 +98,3 @@ export default function App() {
     </Router>
   );
 }
-
-

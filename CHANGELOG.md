@@ -358,3 +358,9 @@
   - Логін повертає токен із роллю.
   - Ендпоінти /finance, /inventory, /sales, /legal доступні відповідно до ролей.
 - Ролі працюють коректно: користувачі бачать лише свої дані.
+## [2026-04-29]
+- Створено контролер usersController.js з CRUD‑операціями
+- Налаштовано маршрути для Users, Finance, HR, Admin, Journal, Products, Purchases, PKash, Legal
+- Видалено зайвий файл home.js, замінено на legal.js
+- Переписано App.jsx з правильним використанням ProtectedRoute (requiredRole + currentRole)
+- Підготовлено план інтеграції фронтенду з бекендом

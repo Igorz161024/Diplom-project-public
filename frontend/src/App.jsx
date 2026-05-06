@@ -1,6 +1,6 @@
 import './App.css';
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // MUI імпорти
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 
 // Компоненти
+import NavBar from "./components/NavBar";
 import LoginForm from "./components/LoginForm";
 import ProtectedRoute from "./components/ProtectedRoute";
 import JournalTable from "./components/JournalTable";
@@ -26,30 +27,23 @@ import Legal from "./components/Legal";
 
 export default function App() {
   const [role, setRole] = useState(localStorage.getItem("role"));
+  const [darkMode, setDarkMode] = useState(true);
 
-  const darkTheme = createTheme({
-    palette: { mode: 'dark' },
+  useEffect(() => {
+    if (role) localStorage.setItem("role", role);
+  }, [role]);
+
+  const theme = createTheme({
+    palette: { mode: darkMode ? 'dark' : 'light' },
   });
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <div className="App">
           {/* Навігаційне меню */}
-          <nav>
-            <Link to="/">Головна</Link> |{" "}
-            <Link to="/journal">Журнал</Link> |{" "}
-            <Link to="/finance">Finance</Link> |{" "}
-            <Link to="/hr">HR</Link> |{" "}
-            <Link to="/admin">Admin</Link> |{" "}
-            <Link to="/products">Products</Link> |{" "}
-            <Link to="/pkash">PKash</Link> |{" "}
-            <Link to="/inventory">Inventory</Link> |{" "}
-            <Link to="/purchases">Purchases</Link> |{" "}
-            <Link to="/sales">Sales</Link> |{" "}
-            <Link to="/legal">Legal</Link>
-          </nav>
+          <NavBar />
 
           <Routes>
             {/* Головна */}
@@ -109,10 +103,23 @@ export default function App() {
             }/>
           </Routes>
 
-          {/* Кнопка збереження */}
+          {/* Кнопки */}
           <div style={{ marginTop: "20px" }}>
-            <Button variant="contained" color="primary" startIcon={<SaveIcon />}>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              startIcon={<SaveIcon />}
+              onClick={() => alert("Збережено!")}
+            >
               Зберегти
+            </Button>
+
+            <Button 
+              variant="outlined" 
+              style={{ marginLeft: "10px" }}
+              onClick={() => setDarkMode(!darkMode)}
+            >
+              Перемкнути тему
             </Button>
           </div>
         </div>

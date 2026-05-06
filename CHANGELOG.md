@@ -370,3 +370,9 @@
 - Переписано App.jsx: додано Material UI тему, меню навігації та ProtectedRoute для ролей
 - Оновлено index.js для імпорту App.jsx
 - Видалено App.js як дубль
+## [2026-05-06]
+- Додано компонент NavBar.jsx для UI навігації між модулями ERP.
+- Підключено NavBar у App.jsx.
+- Перевірено всі маршрути у App.jsx — модулі Finance, HR, Admin, Products, PKash, Inventory, Purchases, Sales, Legal.
+- Закрито пункти 5 і 6 плану (маршрути та UI навігація).
+- Встановлено axios у frontend для роботи з компонентами.

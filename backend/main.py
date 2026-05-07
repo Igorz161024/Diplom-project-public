@@ -1,12 +1,12 @@
 ﻿from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from backend.database import engine
 from backend.modules.finance import Base, get_account_balance, add_account, add_entry
 from backend.auth import create_access_token, get_current_user_role
-from backend.modules.users import User   # приклад
-from backend.modules.products import Product   # приклад
+from backend.modules.users import User
+from backend.modules.products import Product
 
 # нові роутери
 from backend.finance_router import router as finance_router
@@ -30,7 +30,7 @@ app = FastAPI(
 # ✅ Додаємо CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],  # дозволяємо фронтенд
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,27 +46,22 @@ app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"]
 app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
 app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
 
-# Логін з різними ролями (9 ролей)
+# Логін з різними ролями
 @app.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    if form_data.username == "admin" and form_data.password == "1234":
-        role = "admin"
-    elif form_data.username == "accountant" and form_data.password == "1234":
-        role = "accountant"
-    elif form_data.username == "hr" and form_data.password == "1234":
-        role = "hr"
-    elif form_data.username == "products" and form_data.password == "1234":
-        role = "products"
-    elif form_data.username == "pkash" and form_data.password == "1234":
-        role = "pkash"
-    elif form_data.username == "inventory" and form_data.password == "1234":
-        role = "inventory"
-    elif form_data.username == "purchases" and form_data.password == "1234":
-        role = "purchases"
-    elif form_data.username == "sales" and form_data.password == "1234":
-        role = "sales"
-    elif form_data.username == "legal" and form_data.password == "1234":
-        role = "legal"
+    users = {
+        "admin": "admin",
+        "accountant": "accountant",
+        "hr": "hr",
+        "products": "products",
+        "pkash": "pkash",
+        "inventory": "inventory",
+        "purchases": "purchases",
+        "sales": "sales",
+        "legal": "legal"
+    }
+    if form_data.username in users and form_data.password == "1234":
+        role = users[form_data.username]
     else:
         raise HTTPException(status_code=400, detail="Невірний логін або пароль")
 
@@ -79,13 +74,14 @@ def get_connection():
         dbname="erp_diplom",
         user="postgres",
         password="4568",
-        host="db",
+        host="localhost",   # ✅ для запуску з PowerShell
         port="5432"
     )
 
 @app.get("/api/journal")
 def get_journal():
     records = []
+    conn = get_connection()
     with conn.cursor() as cur:
         cur.execute("SELECT date, operation, status, amount FROM journal ORDER BY id;")
         for row in cur.fetchall():
@@ -95,8 +91,8 @@ def get_journal():
                 "status": row[2],
                 "amount": row[3]
             })
+    conn.close()
     return JSONResponse(content=records, media_type="application/json; charset=utf-8")
-
 
 # Ендпоінти для ролей
 @app.get("/finance")
@@ -153,7 +149,7 @@ def read_legal(role: str = Depends(get_current_user_role)):
         raise HTTPException(status_code=403, detail="Access denied")
     return {"msg": "Legal data visible"}
 
-# Додавання проводки (захищено токеном)
+# Додавання проводки
 @app.post("/add_entry")
 def create_entry(
     amount: int,
@@ -221,4 +217,4 @@ def plot_report(role: str = Depends(get_current_user_role)):
     plt.savefig(buf, format="png")
     buf.seek(0)
 
-    return
+    return StreamingResponse(buf, media_type="image/png")

@@ -10,9 +10,11 @@ import SaveIcon from '@mui/icons-material/Save';
 
 // Компоненти
 import NavBar from "./components/NavBar";
-import LoginForm from "./components/LoginForm";
-import ProtectedRoute from "./components/ProtectedRoute";
 import JournalTable from "./components/JournalTable";
+
+// Авторизація
+import LoginForm from "./auth/LoginForm";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 // ERP модулі
 import Finance from "./components/Finance";
@@ -46,11 +48,12 @@ export default function App() {
           <NavBar />
 
           <Routes>
-            {/* Головна */}
-            <Route path="/" element={<h1>ERP Головна</h1>} />
-
-            {/* Логін */}
-            <Route path="/login" element={<LoginForm onLogin={(r) => setRole(r)} />} />
+            {/* Головна з логіном */}
+            <Route path="/" element={
+              !role 
+                ? <LoginForm onLogin={(r) => setRole(r)} /> 
+                : <h1>ERP Головна</h1>
+            } />
 
             {/* Журнал */}
             <Route path="/journal" element={<JournalTable />} />
@@ -127,3 +130,5 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+

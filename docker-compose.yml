@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:18
@@ -52,9 +54,10 @@ services:
       - .env.prod
     volumes:
       - ./backups:/backups
+      - ./backup.sh:/docker-entrypoint-initdb.d/backup.sh
     networks:
       - erp_network
-    entrypoint: ["bash", "-c", "while true; do pg_dump -h db -U postgres -d erp_diplom > /backups/erp_diplom_\\$(date +%F_%H-%M).sql; sleep 86400; done"]
+    entrypoint: ["bash", "/docker-entrypoint-initdb.d/backup.sh"]
 
 networks:
   erp_network:

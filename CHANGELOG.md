@@ -376,3 +376,14 @@
 - Перевірено всі маршрути у App.jsx — модулі Finance, HR, Admin, Products, PKash, Inventory, Purchases, Sales, Legal.
 - Закрито пункти 5 і 6 плану (маршрути та UI навігація).
 - Встановлено axios у frontend для роботи з компонентами.
+## [2026-05-07]
+### Added
+- Додано сервіс резервного копіювання бази даних у docker-compose.yml.
+- Створено скрипт `backup.sh` для автоматичного щоденного дампу бази `erp_diplom`.
+
+### Changed
+- Оновлено конфігурацію `docker-compose.yml` для коректного запуску бекенду, фронтенду та бази у WSL2.
+- Виправлено інтерполяцію команди у сервісі `backup`.
+
+### Fixed
+- Усунено помилку `Invalid interpolation format` у секції `backup`.

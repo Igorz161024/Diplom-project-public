@@ -1,25 +1,25 @@
 ﻿from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from backend.database import engine
 from backend.modules.finance import Base, get_account_balance, add_account, add_entry
 from backend.auth import create_access_token, get_current_user_role
 from backend.modules.users import User
 from backend.modules.products import Product
 
-# нові роутери
+# ✅ Підключаємо роутери
 from backend.finance_router import router as finance_router
 from backend.inventory_router import router as inventory_router
 from backend.purchases_router import router as purchases_router
 from backend.sales_router import router as sales_router
 from backend.legal_router import router as legal_router
+from backend.routers import journal_router
 
 import datetime
 import pandas as pd
 import io
 import matplotlib.pyplot as plt
-import psycopg2
 
 app = FastAPI(
     title="ERP Diplom Project",
@@ -36,17 +36,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# створюємо таблиці у базі при старті
+# ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# 🔗 Підключаємо нові роутери
+# ✅ Підключаємо всі роутери
 app.include_router(finance_router, prefix="/api/finance", tags=["Finance"])
 app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"])
 app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
 app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
 app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
+app.include_router(journal_router.router, prefix="/api/journal", tags=["Journal"])
 
-# Логін з різними ролями
+# 🔑 Логін з різними ролями
 @app.post("/token")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     users = {
@@ -68,88 +69,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = create_access_token({"sub": form_data.username, "role": role})
     return {"access_token": access_token, "token_type": "bearer", "role": role}
 
-# Ендпоінт для журналу операцій (Postgres)
-def get_connection():
-    return psycopg2.connect(
-        dbname="erp_diplom",
-        user="postgres",
-        password="4568",
-        host="localhost",   # ✅ для запуску з PowerShell
-        port="5432"
-    )
-
-@app.get("/api/journal")
-def get_journal():
-    records = []
-    conn = get_connection()
-    with conn.cursor() as cur:
-        cur.execute("SELECT date, operation, status, amount FROM journal ORDER BY id;")
-        for row in cur.fetchall():
-            records.append({
-                "date": str(row[0]),
-                "operation": row[1],
-                "status": row[2],
-                "amount": row[3]
-            })
-    conn.close()
-    return JSONResponse(content=records, media_type="application/json; charset=utf-8")
-
-# Ендпоінти для ролей
-@app.get("/finance")
-def read_finance(role: str = Depends(get_current_user_role)):
-    if role not in ["accountant", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "Finance data visible"}
-
-@app.get("/hr")
-def read_hr(role: str = Depends(get_current_user_role)):
-    if role not in ["hr", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "HR data visible"}
-
-@app.get("/admin")
-def read_admin(role: str = Depends(get_current_user_role)):
-    if role != "admin":
-        raise HTTPException(status_code=403, detail="Admins only")
-    return {"msg": "Admin panel visible"}
-
-@app.get("/products")
-def read_products(role: str = Depends(get_current_user_role)):
-    if role not in ["products", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "Products data visible"}
-
-@app.get("/pkash")
-def read_pkash(role: str = Depends(get_current_user_role)):
-    if role not in ["pkash", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "PKash data visible"}
-
-@app.get("/inventory")
-def read_inventory(role: str = Depends(get_current_user_role)):
-    if role not in ["inventory", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "Inventory data visible"}
-
-@app.get("/purchases")
-def read_purchases(role: str = Depends(get_current_user_role)):
-    if role not in ["purchases", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "Purchases data visible"}
-
-@app.get("/sales")
-def read_sales(role: str = Depends(get_current_user_role)):
-    if role not in ["sales", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "Sales data visible"}
-
-@app.get("/legal")
-def read_legal(role: str = Depends(get_current_user_role)):
-    if role not in ["legal", "admin"]:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return {"msg": "Legal data visible"}
-
-# Додавання проводки
+# 📊 Ендпоінти для фінансових звітів
 @app.post("/add_entry")
 def create_entry(
     amount: int,
@@ -218,3 +138,4 @@ def plot_report(role: str = Depends(get_current_user_role)):
     buf.seek(0)
 
     return StreamingResponse(buf, media_type="image/png")
+

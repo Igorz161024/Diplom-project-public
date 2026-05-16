@@ -14,7 +14,7 @@ from backend.inventory_router import router as inventory_router
 from backend.purchases_router import router as purchases_router
 from backend.sales_router import router as sales_router
 from backend.legal_router import router as legal_router
-from backend.routers import journal_router
+from backend.routers.journal_router import router as journal_router
 
 import datetime
 import pandas as pd
@@ -45,7 +45,7 @@ app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"]
 app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
 app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
 app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
-app.include_router(journal_router.router, prefix="/api/journal", tags=["Journal"])
+app.include_router(journal_router, prefix="/api/journal", tags=["Journal"])
 
 # 🔑 Логін з різними ролями
 @app.post("/token")
@@ -138,4 +138,3 @@ def plot_report(role: str = Depends(get_current_user_role)):
     buf.seek(0)
 
     return StreamingResponse(buf, media_type="image/png")
-

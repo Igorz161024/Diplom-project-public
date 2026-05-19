@@ -1,90 +1,49 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-import psycopg2
-import psycopg2.extras
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
 
-# Ініціалізація роутера
-router = APIRouter()
+from backend.database import SessionLocal
+from backend.models.journal import Journal
+from backend.schemas.journal import JournalSchema, JournalCreate
 
-# Модель для записів журналу
-class Journal(BaseModel):
-    date: str
-    description: str
-    status: str
-    amount: float
-    entry_id: int | None = None
+# ❌ prefix тут не потрібен
+router = APIRouter(tags=["Journal"])
 
-# Параметри підключення до Postgres через ім’я контейнера
-conn_params = {
-    "dbname": "erp_diplom",
-    "user": "postgres",
-    "password": "4568",
-    "host": "erp_db",   # ✅ ім’я контейнера бази
-    "port": 5432        # ✅ внутрішній порт Postgres
-}
-
-def get_conn():
-    return psycopg2.connect(**conn_params)
-
-# Отримати всі записи
-@router.get("/")
-def get_all():
+def get_db():
+    db = SessionLocal()
     try:
-        conn = get_conn()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute("SELECT * FROM journal ORDER BY id;")
-        rows = cur.fetchall()
-        cur.close()
-        conn.close()
-        return rows
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        yield db
+    finally:
+        db.close()
 
-# Додати новий запис
-@router.post("/")
-def add_entry(entry: Journal):
-    try:
-        conn = get_conn()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO journal (date, description, status, amount, entry_id) VALUES (%s, %s, %s, %s, %s) RETURNING id;",
-            (entry.date, entry.description, entry.status, entry.amount, entry.entry_id)
-        )
-        new_id = cur.fetchone()[0]
-        conn.commit()
-        cur.close()
-        conn.close()
-        return {"id": new_id, "message": "Inserted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/", response_model=List[JournalSchema])
+def get_all(db: Session = Depends(get_db)):
+    return db.query(Journal).order_by(Journal.id).all()
 
-# Оновити запис
-@router.put("/{id}")
-def update_entry(id: int, entry: Journal):
-    try:
-        conn = get_conn()
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE journal SET date=%s, description=%s, status=%s, amount=%s, entry_id=%s WHERE id=%s;",
-            (entry.date, entry.description, entry.status, entry.amount, entry.entry_id, id)
-        )
-        conn.commit()
-        cur.close()
-        conn.close()
-        return {"message": "Updated successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.post("/", response_model=JournalSchema)
+def add_entry(entry: JournalCreate, db: Session = Depends(get_db)):
+    db_entry = Journal(**entry.dict())
+    db.add(db_entry)
+    db.commit()
+    db.refresh(db_entry)
+    return db_entry
 
-# Видалити запис
+@router.put("/{id}", response_model=JournalSchema)
+def update_entry(id: int, entry: JournalCreate, db: Session = Depends(get_db)):
+    db_entry = db.query(Journal).filter(Journal.id == id).first()
+    if not db_entry:
+        raise HTTPException(status_code=404, detail="Entry not found")
+    for key, value in entry.dict().items():
+        setattr(db_entry, key, value)
+    db.commit()
+    db.refresh(db_entry)
+    return db_entry
+
 @router.delete("/{id}")
-def delete_entry(id: int):
-    try:
-        conn = get_conn()
-        cur = conn.cursor()
-        cur.execute("DELETE FROM journal WHERE id=%s;", (id,))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return {"message": "Deleted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def delete_entry(id: int, db: Session = Depends(get_db)):
+    db_entry = db.query(Journal).filter(Journal.id == id).first()
+    if not db_entry:
+        raise HTTPException(status_code=404, detail="Entry not found")
+    db.delete(db_entry)
+    db.commit()
+    return {"message": "Deleted successfully"}

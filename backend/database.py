@@ -7,7 +7,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 # 🔗 Якщо змінна не задана, беремо дефолт для локального запуску
 if not DATABASE_URL:
-    DATABASE_URL = "postgresql+psycopg2://postgres:4568@localhost:5432/erp_diplom"
+    DATABASE_URL = "postgresql+psycopg2://postgres:4568@localhost:5433/erp_diplom"
 
 # 🔗 Engine для Postgres
 engine = create_engine(DATABASE_URL)

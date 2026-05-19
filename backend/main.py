@@ -2,11 +2,8 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from backend.database import engine
-from backend.modules.finance import Base, get_account_balance, add_account, add_entry
+from backend.database import Base, engine
 from backend.auth import create_access_token, get_current_user_role
-from backend.modules.users import User
-from backend.modules.products import Product
 
 # ✅ Підключаємо роутери
 from backend.finance_router import router as finance_router
@@ -21,6 +18,7 @@ import pandas as pd
 import io
 import matplotlib.pyplot as plt
 
+# ✅ Ініціалізація FastAPI
 app = FastAPI(
     title="ERP Diplom Project",
     description="Backend API для фінансів, інвентаризації, закупівель, продажів та юридичних документів",
@@ -39,13 +37,13 @@ app.add_middleware(
 # ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# ✅ Підключаємо всі роутери
+# ✅ Підключаємо всі роутери з префіксами
 app.include_router(finance_router, prefix="/api/finance", tags=["Finance"])
 app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"])
 app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
 app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
 app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
-app.include_router(journal_router, prefix="/api/journal", tags=["Journal"])
+app.include_router(journal_router, prefix="/api/journal", tags=["Journal"])  # ← тут правильний префікс
 
 # 🔑 Логін з різними ролями
 @app.post("/token")
@@ -79,6 +77,8 @@ def create_entry(
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
 
+    from backend.modules.finance import get_account_balance, add_account, add_entry
+
     cash = add_account("30", "Cash", "актив")
     revenue = add_account("70", "Revenue", "дохід")
 
@@ -98,12 +98,14 @@ def create_entry(
 
 @app.get("/balance/{account_id}")
 def balance(account_id: int, role: str = Depends(get_current_user_role)):
+    from backend.modules.finance import get_account_balance
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
     return {"account_id": account_id, "balance": get_account_balance(account_id)}
 
 @app.get("/report")
 def report(role: str = Depends(get_current_user_role)):
+    from backend.modules.finance import get_account_balance
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
 
@@ -118,6 +120,7 @@ def report(role: str = Depends(get_current_user_role)):
 
 @app.get("/plot")
 def plot_report(role: str = Depends(get_current_user_role)):
+    from backend.modules.finance import get_account_balance
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
 

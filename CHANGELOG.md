@@ -428,3 +428,18 @@
 - Переписано journal_router.py для коректної роботи CRUD-ендпоінтів.
 - Перевірено Swagger UI — секція Journal з’явилась у документації.
 - Проведено тестові запити GET/POST/PUT/DELETE для таблиці journal.
+## [2026-05-21]
+### Added
+- Підключено `journal_router` через `backend.schemas`.
+- Реалізовано CRUD‑ендпоінти для Journal (GET, POST, PUT, DELETE).
+- Перевірено роботу ендпоінтів через `curl`:
+  - Створення нового запису (`POST /api/journal/`)
+  - Отримання запису за ID (`GET /api/journal/{id}`)
+  - Оновлення запису (`PUT /api/journal/{id}`)
+  - Видалення запису (`DELETE /api/journal/{id}`)
+- Підтверджено коректну відповідь JSON на всі CRUD‑операції.
+## [2026-05-21]
+### Changed
+- Перенесено `journal_router.py` у `backend/schemas/` для інтеграції з ORM та схемами.
+- Основні роутери залишаються у `backend/routers/` для модульної архітектури.
+- CRUD‑операції для Journal перевірені через curl (GET/POST/PUT/DELETE).

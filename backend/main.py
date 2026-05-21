@@ -2,6 +2,7 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+
 from backend.database import Base, engine
 from backend.auth import create_access_token, get_current_user_role
 
@@ -11,7 +12,7 @@ from backend.inventory_router import router as inventory_router
 from backend.purchases_router import router as purchases_router
 from backend.sales_router import router as sales_router
 from backend.legal_router import router as legal_router
-from backend.routers.journal_router import router as journal_router
+from backend.schemas.journal_router import router as journal_router   # ← тепер імпорт зі schemas
 
 import datetime
 import pandas as pd
@@ -43,7 +44,7 @@ app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"]
 app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
 app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
 app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
-app.include_router(journal_router, prefix="/api/journal", tags=["Journal"])  # ← тут правильний префікс
+app.include_router(journal_router, prefix="/api/journal", tags=["Journal"])
 
 # 🔑 Логін з різними ролями
 @app.post("/token")

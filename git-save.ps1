@@ -5,10 +5,16 @@ chcp 65001 > $null
 
 git add .
 git commit -m "$message"
+
+# Пуш у приватний репозиторій
 git push origin master
 
-Write-Output "Зміни збережено на GitHub (гілка master)"
+# Пуш у публічний репозиторій
+git push public master
+
+Write-Output "Зміни збережено у приватному та публічному репозиторіях (гілка master)"
 git status
+
 
 
 

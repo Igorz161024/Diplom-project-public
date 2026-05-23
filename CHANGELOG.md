@@ -443,3 +443,8 @@
 - Перенесено `journal_router.py` у `backend/schemas/` для інтеграції з ORM та схемами.
 - Основні роутери залишаються у `backend/routers/` для модульної архітектури.
 - CRUD‑операції для Journal перевірені через curl (GET/POST/PUT/DELETE).
+## 2026-05-23
+- Перевірено таблиці journal/accounts/entry_lines у БД.
+- CRUD‑операції протестовані через SQL та FastAPI.
+- Виявлено різницю між description (БД) та operation (API).
+- Контейнери erp_db, erp_backend, erp_frontend, erp_backup запущені.

@@ -448,3 +448,9 @@
 - CRUD‑операції протестовані через SQL та FastAPI.
 - Виявлено різницю між description (БД) та operation (API).
 - Контейнери erp_db, erp_backend, erp_frontend, erp_backup запущені.
+## [2026-05-24] Backend structure update
+- Переписано файл backend/schemas.py: додано узгоджені схеми для Journal, Finance, Inventory, Purchases, Sales, Legal.
+- Створено роутери для Finance, Inventory, Purchases, Sales, Legal (поки що зі статичними заглушками).
+- Journal router переведено на повноцінний CRUD із БД.
+- Оновлено main.py: підключено всі роутери, додано CORS, створення таблиць при старті.
+- Підготовлено шаблони моделей для майбутнього CRUD у Finance, Inventory, Purchases, Sales, Legal.

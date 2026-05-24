@@ -3,21 +3,18 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
-from backend.database import Base, engine
-from backend.auth import create_access_token, get_current_user_role
-
-# ✅ Підключаємо роутери
-from backend.finance_router import router as finance_router
-from backend.inventory_router import router as inventory_router
-from backend.purchases_router import router as purchases_router
-from backend.sales_router import router as sales_router
-from backend.legal_router import router as legal_router
-from backend.schemas.journal_router import router as journal_router   # ← тепер імпорт зі schemas
-
 import datetime
 import pandas as pd
 import io
 import matplotlib.pyplot as plt
+
+from backend.database import Base, engine
+from backend.auth import create_access_token, get_current_user_role
+
+# ✅ Підключаємо роутери
+from backend.routers import journal_router
+# Якщо інші роутери ще не створені — зроби мінімальні файли з APIRouter()
+# Наприклад: backend/finance_router.py → router = APIRouter()
 
 # ✅ Ініціалізація FastAPI
 app = FastAPI(
@@ -38,13 +35,14 @@ app.add_middleware(
 # ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# ✅ Підключаємо всі роутери з префіксами
-app.include_router(finance_router, prefix="/api/finance", tags=["Finance"])
-app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"])
-app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
-app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
-app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
-app.include_router(journal_router, prefix="/api/journal", tags=["Journal"])
+# ✅ Підключаємо роутери
+app.include_router(journal_router.router, prefix="/api/journal", tags=["Journal"])
+# Додай інші, коли створиш:
+# app.include_router(finance_router, prefix="/api/finance", tags=["Finance"])
+# app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"])
+# app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
+# app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
+# app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
 
 # 🔑 Логін з різними ролями
 @app.post("/token")

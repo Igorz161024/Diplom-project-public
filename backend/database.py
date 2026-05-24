@@ -18,3 +18,12 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # 📦 Базовий клас для моделей
 Base = declarative_base()
 
+# ✅ Функція для отримання сесії (використовується у роутерах)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+

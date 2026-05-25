@@ -454,3 +454,12 @@
 - Journal router переведено на повноцінний CRUD із БД.
 - Оновлено main.py: підключено всі роутери, додано CORS, створення таблиць при старті.
 - Підготовлено шаблони моделей для майбутнього CRUD у Finance, Inventory, Purchases, Sales, Legal.
+## [2026-05-25]
+### Зміни
+- Переписано файл `backend/main.py`:
+  - Прибрано дублювання префіксів у `include_router()`.
+  - Підключено всі модулі (Journal, Finance, Inventory, Purchases, Sales, Legal) через єдиний `main.py`.
+  - Додано CORS для фронтенду (`http://localhost:3000`).
+  - Ініціалізація бази через `Base.metadata.create_all(bind=engine)`.
+  - Залишено кастомні ендпоінти: `/token`, `/add_entry`, `/balance/{account_id}`, `/report`, `/plot`.
+- Відновлено доступність Swagger UI (`/docs`) з коректними шляхами.

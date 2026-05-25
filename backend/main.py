@@ -11,10 +11,8 @@ import matplotlib.pyplot as plt
 from backend.database import Base, engine
 from backend.auth import create_access_token, get_current_user_role
 
-# ✅ Підключаємо роутери
-from backend.routers import journal_router
-# Якщо інші роутери ще не створені — зроби мінімальні файли з APIRouter()
-# Наприклад: backend/finance_router.py → router = APIRouter()
+# ✅ Підключаємо роутери (залишаємо їх як є)
+from backend.routers import journal_router, finance_router, inventory_router, purchases_router, sales_router, legal_router
 
 # ✅ Ініціалізація FastAPI
 app = FastAPI(
@@ -35,14 +33,13 @@ app.add_middleware(
 # ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# ✅ Підключаємо роутери
-app.include_router(journal_router.router, prefix="/api/journal", tags=["Journal"])
-# Додай інші, коли створиш:
-# app.include_router(finance_router, prefix="/api/finance", tags=["Finance"])
-# app.include_router(inventory_router, prefix="/api/inventory", tags=["Inventory"])
-# app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
-# app.include_router(sales_router, prefix="/api/sales", tags=["Sales"])
-# app.include_router(legal_router, prefix="/api/legal", tags=["Legal"])
+# ✅ Підключаємо роутери (без дублювання префіксів)
+app.include_router(journal_router.router, tags=["Journal"])
+app.include_router(finance_router.router, tags=["Finance"])
+app.include_router(inventory_router.router, tags=["Inventory"])
+app.include_router(purchases_router.router, tags=["Purchases"])
+app.include_router(sales_router.router, tags=["Sales"])
+app.include_router(legal_router.router, tags=["Legal"])
 
 # 🔑 Логін з різними ролями
 @app.post("/token")

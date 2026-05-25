@@ -1,4 +1,8 @@
 from .accounts import Account
-from .journal import Journal
 from .entry_lines import EntryLine
-
+from .journal import Journal
+from .finance import Finance
+from .inventory import Inventory
+from .purchases import Purchases
+from .sales import Sales
+from .legal import Legal

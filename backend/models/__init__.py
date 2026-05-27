@@ -1,5 +1,3 @@
-from .accounts import Account
-from .entry_lines import EntryLine
 from .journal import Journal
 from .finance import Finance
 from .inventory import Inventory

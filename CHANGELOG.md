@@ -463,3 +463,11 @@
   - Ініціалізація бази через `Base.metadata.create_all(bind=engine)`.
   - Залишено кастомні ендпоінти: `/token`, `/add_entry`, `/balance/{account_id}`, `/report`, `/plot`.
 - Відновлено доступність Swagger UI (`/docs`) з коректними шляхами.
+## [2026-05-27]
+### Added
+- Виправлено циклічні імпорти у backend/models/journal.py (прибрано зайвий self-import).
+- Переписано моделі Journal та Finance з чіткими колонками.
+- Оновлено backend/models/__init__.py для коректного імпорту моделей.
+- Переписано схеми Journal та Finance (Pydantic v2, from_attributes).
+- Запущено сервер на порту 8001 без конфліктів.
+- Перевірено Swagger UI: доступні CRUD-ендпоінти для Journal та Finance, а також фінансові звіти (/add_entry, /balance, /report, /plot).

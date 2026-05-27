@@ -11,8 +11,15 @@ import matplotlib.pyplot as plt
 from backend.database import Base, engine
 from backend.auth import create_access_token, get_current_user_role
 
-# ✅ Підключаємо роутери (залишаємо їх як є)
-from backend.routers import journal_router, finance_router, inventory_router, purchases_router, sales_router, legal_router
+# ✅ Підключаємо роутери
+from backend.routers import (
+    journal_router,
+    finance_router,
+    inventory_router,
+    purchases_router,
+    sales_router,
+    legal_router
+)
 
 # ✅ Ініціалізація FastAPI
 app = FastAPI(
@@ -33,7 +40,7 @@ app.add_middleware(
 # ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# ✅ Підключаємо роутери (без дублювання префіксів)
+# ✅ Підключаємо роутери
 app.include_router(journal_router.router, tags=["Journal"])
 app.include_router(finance_router.router, tags=["Finance"])
 app.include_router(inventory_router.router, tags=["Inventory"])

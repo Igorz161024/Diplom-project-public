@@ -2,6 +2,7 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 
 import datetime
 import pandas as pd
@@ -40,7 +41,7 @@ app.add_middleware(
 # ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# ✅ Підключаємо роутери
+# ✅ Підключаємо CRUD‑роутери
 app.include_router(journal_router.router, tags=["Journal"])
 app.include_router(finance_router.router, tags=["Finance"])
 app.include_router(inventory_router.router, tags=["Inventory"])
@@ -70,13 +71,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = create_access_token({"sub": form_data.username, "role": role})
     return {"access_token": access_token, "token_type": "bearer", "role": role}
 
+# 📊 Модель для додавання запису
+class Entry(BaseModel):
+    amount: int
+    description: str = "Продаж товару за готівку"
+
 # 📊 Ендпоінти для фінансових звітів
 @app.post("/add_entry")
-def create_entry(
-    amount: int,
-    description: str = "Продаж товару за готівку",
-    role: str = Depends(get_current_user_role)
-):
+def create_entry(entry: Entry, role: str = Depends(get_current_user_role)):
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
 
@@ -87,10 +89,10 @@ def create_entry(
 
     add_entry(
         date=datetime.date.today(),
-        description=description,
+        description=entry.description,
         lines=[
-            {"account_id": cash.id, "debit": amount, "credit": 0},
-            {"account_id": revenue.id, "debit": 0, "credit": amount}
+            {"account_id": cash.id, "debit": entry.amount, "credit": 0},
+            {"account_id": revenue.id, "debit": 0, "credit": entry.amount}
         ]
     )
 

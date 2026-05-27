@@ -1,13 +1,19 @@
+import os
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
+from dotenv import load_dotenv
 
-SECRET_KEY = "super_secret_key"   # заміни на свій секретний ключ
+# 🔑 Завантажуємо змінні з .env.prod
+load_dotenv(dotenv_path=".env.prod")
+
+SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey123")  # fallback якщо .env не підвантажився
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+# 🔒 Налаштування для паролів
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -20,7 +26,7 @@ def verify_password(plain_password: str, hashed_password: str):
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     """
     Створює JWT токен з даними користувача.
-    У data можна передати {"sub": user_id, "role": "accountant"} або іншу роль.
+    У data можна передати {"sub": username, "role": "accountant"}.
     """
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))

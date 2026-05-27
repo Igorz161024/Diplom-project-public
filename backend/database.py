@@ -1,8 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
+from dotenv import load_dotenv
 
-# ⚙️ URL до БД з .env (якщо є)
+# 🔑 Завантажуємо саме .env.prod
+load_dotenv(".env.prod")
+
+# ⚙️ URL до БД з .env.prod
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # 🔗 Якщо змінна не задана, беремо дефолт для локального запуску
@@ -25,5 +29,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-

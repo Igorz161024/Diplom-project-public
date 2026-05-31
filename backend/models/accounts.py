@@ -1,12 +1,13 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import relationship
 from backend.database import Base
 
 class Account(Base):
     __tablename__ = "accounts"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, index=True, nullable=False)
-    email = Column(String(100), unique=True, index=True, nullable=False)
-    role = Column(String(50), nullable=False)
-    password_hash = Column(String(255), nullable=False)
+    code = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
+    balance = Column(Float, default=0)
 
+    journals = relationship("Journal", back_populates="account")

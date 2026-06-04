@@ -48,7 +48,7 @@ export default function App() {
           <NavBar />
 
           <Routes>
-            {/* Головна з логіном */}
+            {/* Головна: якщо немає ролі → логін */}
             <Route path="/" element={
               !role 
                 ? <LoginForm onLogin={(r) => setRole(r)} /> 

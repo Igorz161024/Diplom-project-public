@@ -527,3 +527,11 @@
 - Додано нові компоненти у фронтенд: FinancePlot.jsx, FinanceReportTable.jsx.
 - Створено резервні дампи бази у `backups/erp_diplom_2026-06-04_*.sql`.
 - Налагоджено SSH‑автентифікацію для GitHub (id_ed25519), виконано успішний пуш у приватний репозиторій (master branch).
+## [2026-06-07] Backend & DB стабілізація + ярлик запуску
+- Виправлено конфігурацію `docker-compose.yml` для Postgres 18 (правильний том `/var/lib/postgresql`).
+- Пересобрано середовище: база `erp_diplom` піднята у статусі healthy.
+- Бекенд (`erp_backend`) стартує стабільно, Uvicorn слухає на порту 8000.
+- Фронтенд (`erp_frontend`) успішно збирається та працює на порту 3000.
+- Перевірено наявність таблиць у базі: accounts, finance, inventory, journal, legal, purchases, sales.
+- Додано PowerShell‑скрипт `start-erp.ps1` для запуску ERP.
+- Створено ярлик на робочому столі Windows, який виконує `start-erp.ps1` для швидкого доступу до ERP‑системи.

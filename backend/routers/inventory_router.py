@@ -5,10 +5,10 @@ from backend import models
 from backend.schemas import InventorySchema, InventoryCreate, InventoryUpdate
 
 router = APIRouter(
-    prefix="/api/inventory",
-    tags=["inventory"]
+    tags=["Inventory"]
 )
 
+# --- CRUD для Inventory ---
 @router.get("/", response_model=list[InventorySchema])
 def read_inventory(db: Session = Depends(get_db)):
     return db.query(models.Inventory).all()

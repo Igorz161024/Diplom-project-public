@@ -5,10 +5,10 @@ from backend import models
 from backend.schemas import JournalSchema, JournalCreate, JournalUpdate
 
 router = APIRouter(
-    prefix="/api/journal",
-    tags=["journal"]
+    tags=["Journal"]
 )
 
+# --- CRUD для Journal ---
 @router.get("/", response_model=list[JournalSchema])
 def read_journal(db: Session = Depends(get_db)):
     return db.query(models.Journal).all()

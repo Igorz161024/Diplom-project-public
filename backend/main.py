@@ -41,13 +41,13 @@ app.add_middleware(
 # ✅ Створюємо таблиці у базі при старті
 Base.metadata.create_all(bind=engine)
 
-# ✅ Підключаємо CRUD‑роутери
-app.include_router(journal_router.router, tags=["Journal"])
-app.include_router(finance_router.router, tags=["Finance"])
-app.include_router(inventory_router.router, tags=["Inventory"])
-app.include_router(purchases_router.router, tags=["Purchases"])
-app.include_router(sales_router.router, tags=["Sales"])
-app.include_router(legal_router.router, tags=["Legal"])
+# ✅ Підключаємо CRUD‑роутери з префіксами
+app.include_router(journal_router.router, prefix="/api/journal", tags=["Journal"])
+app.include_router(finance_router.router, prefix="/api/finance", tags=["Finance"])
+app.include_router(inventory_router.router, prefix="/api/inventory", tags=["Inventory"])
+app.include_router(purchases_router.router, prefix="/api/purchases", tags=["Purchases"])
+app.include_router(sales_router.router, prefix="/api/sales", tags=["Sales"])
+app.include_router(legal_router.router, prefix="/api/legal", tags=["Legal"])
 
 # 🔑 Логін з різними ролями
 @app.post("/token")
@@ -77,7 +77,7 @@ class Entry(BaseModel):
     description: str = "Продаж товару за готівку"
 
 # 📊 Ендпоінти для фінансових звітів
-@app.post("/add_entry")
+@app.post("/api/finance/add_entry")
 def create_entry(entry: Entry, role: str = Depends(get_current_user_role)):
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
@@ -101,14 +101,14 @@ def create_entry(entry: Entry, role: str = Depends(get_current_user_role)):
         "Баланс Revenue": get_account_balance(revenue.id)
     }
 
-@app.get("/balance/{account_id}")
+@app.get("/api/finance/balance/{account_id}")
 def balance(account_id: int, role: str = Depends(get_current_user_role)):
     from backend.modules.finance import get_account_balance
     if role not in ["accountant", "admin"]:
         raise HTTPException(status_code=403, detail="Access denied")
     return {"account_id": account_id, "balance": get_account_balance(account_id)}
 
-@app.get("/report")
+@app.get("/api/finance/report")
 def report(role: str = Depends(get_current_user_role)):
     from backend.modules.finance import get_account_balance
     if role not in ["accountant", "admin"]:
@@ -123,7 +123,7 @@ def report(role: str = Depends(get_current_user_role)):
     total = df["balance"].sum()
     return {"accounts": summary, "total_balance": total}
 
-@app.get("/plot")
+@app.get("/api/finance/plot")
 def plot_report(role: str = Depends(get_current_user_role)):
     from backend.modules.finance import get_account_balance
     if role not in ["accountant", "admin"]:

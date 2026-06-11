@@ -5,10 +5,10 @@ from backend import models
 from backend.schemas import PurchasesSchema, PurchasesCreate, PurchasesUpdate
 
 router = APIRouter(
-    prefix="/api/purchases",
-    tags=["purchases"]
+    tags=["Purchases"]
 )
 
+# --- CRUD для Purchases ---
 @router.get("/", response_model=list[PurchasesSchema])
 def read_purchases(db: Session = Depends(get_db)):
     return db.query(models.Purchases).all()

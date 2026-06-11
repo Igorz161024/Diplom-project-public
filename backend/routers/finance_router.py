@@ -8,8 +8,7 @@ from backend.models.accounts import Account
 from backend.models.journal import Journal
 
 router = APIRouter(
-    prefix="/api/finance",
-    tags=["finance"]
+    tags=["Finance"]
 )
 
 # --- CRUD для Finance ---

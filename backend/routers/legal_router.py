@@ -5,10 +5,10 @@ from backend import models
 from backend.schemas import LegalSchema, LegalCreate, LegalUpdate
 
 router = APIRouter(
-    prefix="/api/legal",
-    tags=["legal"]
+    tags=["Legal"]
 )
 
+# --- CRUD для Legal ---
 @router.get("/", response_model=list[LegalSchema])
 def read_legal(db: Session = Depends(get_db)):
     return db.query(models.Legal).all()

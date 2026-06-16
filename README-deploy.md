@@ -11,14 +11,12 @@
 ---
 
 ## 📥 Клонування репозиторію
-
-### 🔒 Приватний (для власної роботи)
 git clone https://github.com/Igorz161024/Diplom-project.git
 cd Diplom-project
 git clone git@github.com:Igorz161024/Diplom-project.git
 cd Diplom-project
 
-### 🌍 Публічний (для викладача / перевірки)
+### 🌍 Інструкція для користувачів
 git clone https://github.com/Igorz161024/Diplom-project-public.git
 cd Diplom-project-public
 git clone git@github.com:Igorz161024/Diplom-project-public.git
@@ -63,20 +61,32 @@ curl -H "Authorization: Bearer <your_token>" http://localhost:8000/protected_end
 
 ## 🚀 Автоматичний запуск
 ### Windows (PowerShell)
-.\start.ps1
+.\start-erp.ps1
 
 ### Linux/WSL
-bash start.sh
+bash start-erp.sh
+
+> **Примітка:** файл `start-erp.sh` запускає Docker‑контейнери, бекенд (FastAPI) та фронтенд (React) автоматично.  
+> Після виконання скрипта система буде доступна за адресами:  
+> - Фронтенд → http://localhost:3000  
+> - Бекенд → http://localhost:8000  
 
 ---
 
-## 📌 Нотатки
-- Створіть файл .env з параметрами:
-  DATABASE_URL=postgresql://user:password@localhost:5432/erp_diplom
-  JWT_SECRET=your_secret_key
-- Ініціалізація таблиць:
-  alembic upgrade head
-- Для збереження змін використовуйте:
-  .\git-save.ps1
-- Для подвійного пушу в приватний і публічний репозиторії:
-  ./git-double-push.sh
+## 🗄️ Відновлення бази даних
+Приклад команди для відновлення з дампу:
+psql -U postgres -d erp_diplom < backups/erp_diplom_2026-06-11_09-13.sql
+
+---
+
+## 📘 Документація API
+Swagger доступний за адресою:  
+http://localhost:8000/docs  
+
+Основні модулі:  
+- /api/journal  
+- /api/finance  
+- /api/sales  
+- /api/purchases  
+- /api/inventory  
+- /api/legal

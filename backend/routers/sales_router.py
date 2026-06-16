@@ -5,10 +5,10 @@ from backend import models
 from backend.schemas import SalesSchema, SalesCreate, SalesUpdate
 
 router = APIRouter(
-    prefix="/api/sales",
-    tags=["sales"]
+    tags=["Sales"]
 )
 
+# --- CRUD для Sales ---
 @router.get("/", response_model=list[SalesSchema])
 def read_sales(db: Session = Depends(get_db)):
     return db.query(models.Sales).all()

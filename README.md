@@ -108,4 +108,9 @@
 
 ---
 
-👉 Таким чином, README.md поєднує аналітичну частину дипломної роботи та практичні результати з CHANGELOG, створюючи академічний документ, який демонструє як теоретичні знання, так і реальну інженерну реалізацію ERP‑системи.
+## 🔄 Оновлення Node.js у WSL через NVM
+1. Встановити NVM:
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+   export NVM_DIR="$HOME/.nvm"
+   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"

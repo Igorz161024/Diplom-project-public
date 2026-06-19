@@ -29,7 +29,7 @@
 - Swagger UI для тестування API.  
 
 ### Бухгалтерська логіка
-Реалізовано принцип подвійного запису (дебет/кредит) через таблиці `accounts` та `transactions`. Це відповідає міжнародним стандартам (IFRS, GAAP).  
+Реалізовано принцип подвійного запису (дебет/кредит) через таблиці `accounts` та `journal`. Це відповідає міжнародним стандартам (IFRS, GAAP).  
 
 ### Інфраструктура та перспективи
 - Використання Nginx як реверс‑проксі.  
@@ -41,6 +41,7 @@
 ## Висновки
 Я створив навчальну ERP систему, яка відтворює основні принципи великих комерційних продуктів, але залишається гнучкою та адаптованою для практичного використання у навчальному середовищі.  
 Цей дипломний проєкт перетворюється на реальний бекенд‑стек, який може бути використаний як демонстраційна платформа для викладачів та студентів, а також як приклад моїх професійних навичок для роботодавців.  
+Система успішно запускається на чистій системі (WSL/Windows) та проходить тестування API і фронтенду.  
 
 ---
 
@@ -70,11 +71,9 @@
 ## Інсталяція (WSL2 + Docker)
 1. Клонувати репозиторії (приватний та публічний).  
 2. Створити файл `.env.prod` у корені проєкту з параметрами PostgreSQL.  
-3. Запустити контейнери командою: `docker-compose up --build`.  
-4. Перевірити сервіси:  
-   - Backend → `http://localhost:8000`  
-   - Frontend → `http://localhost:3000`  
-   - Database → контейнер `erp_db`  
+3. Запустити контейнери командою:  
+   ```bash
+   docker-compose up --build
 
 ---
 
@@ -114,3 +113,83 @@
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
    export NVM_DIR="$HOME/.nvm"
    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+Перевірка сервісів
+Backend → http://localhost:8000
+
+Frontend → http://localhost:3000
+
+Database → контейнер erp_db
+
+Використання
+Авторизація через /token → отримання JWT.
+
+Доступ до модулів: /api/journal, /api/finance, /api/inventory, /api/purchases, /api/sales, /api/legal.
+
+Спеціальні ендпоінти: /add_entry, /balance/{account_id}, /report, /plot.
+
+Приклади JSON‑запитів
+POST /api/finance/add_entry
+{
+  "account_id": 1,
+  "operation": "income",
+  "status": "completed",
+  "amount": 1500
+}
+POST /api/finance/report
+{
+  "start_date": "2026-06-01",
+  "end_date": "2026-06-04"
+}
+GET /api/finance/balance/1
+Response:
+{
+  "account_id": 1,
+  "balance": 3000.0
+}
+Еволюція системи (результати з CHANGELOG)
+Базові кроки (березень 2026)
+Перехід на PostgreSQL 18.3, налаштування volume та інтеграція FastAPI.
+
+Додано .env.dev та .env.prod для безпечного збереження конфігурацій.
+
+Усунуто проблеми з Docker, відновлено роботу ендпоінтів FastAPI.
+
+Інтегровано React‑фронтенд, створено нові компоненти для бухгалтерії та HR.
+
+Розвиток архітектури (квітень 2026)
+Налаштовано JWT‑автентифікацію для різних ролей (Finance, HR, Admin, Products, PKash, Inventory, Purchases, Sales, Legal).
+
+Додано компонент JournalTable у фронтенді.
+
+Виправлено CORS у FastAPI, налаштовано nginx для SPA‑маршрутів.
+
+Створено модулі Finance, HR, Admin, Products, PKash.
+
+Реалізовано базові роутери FastAPI для Finance, Inventory, Purchases, Sales, Legal.
+
+Завершення CRUD та інтеграція (травень 2026)
+Додано резервне копіювання бази даних через backup.sh.
+
+Запущено модуль Journal, інтегровано фронтенд із бекендом.
+
+Реалізовано повний CRUD для Journal та Finance.
+
+Виправлено циклічні імпорти у моделях, переписано схеми Journal та Finance.
+
+Перевірено фінансові ендпоінти /add_entry, /balance, /report, /plot.
+
+🔄 Оновлення Node.js у WSL через NVM
+Встановити NVM:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+Перезапустити термінал або виконати:
+source ~/.bashrc
+Встановити потрібну версію Node.js:
+nvm install 20
+nvm use 20
+

@@ -458,3 +458,20 @@
 ### Verified
 - Підтверджено, що документація відповідає стандарту [Keep a Changelog].
 - Перевірено узгодженість між README‑deploy.md та CHANGELOG.md.
+### Зміни за 02.07.2026
+- Додано балансувальник у docker-compose для запуску кількох інстансів FastAPI.
+- Створено `frontend/Dockerfile` з multi-stage build (React → Nginx).
+- Створено `frontend/nginx.conf` для проксування запитів `/api/` на бекенд та віддачі фронтенду.
+- Перевірено структуру таблиць у базі `erp_diplom` (accounts, journal).
+- Вставлено тестові записи для перевірки зв’язку між accounts та journal.
+- Виявлено проблему: Nginx показує дефолтну сторінку та блокує POST‑запити.
+- Додано інструкцію `COPY ./nginx.conf /etc/nginx/nginx.conf` у `frontend/Dockerfile`.
+- Зупинились на етапі перевірки та пересборки контейнера frontend, щоб Nginx підхопив кастомний конфіг і працював як reverse proxy для бекенду.
+укцію `COPY ./nginx.conf /etc/nginx/nginx.conf` у `frontend/Dockerfile`.
+- Зупинились на етапі перевірки та пересборки контейнера `frontend`, щоб Nginx підхопив кастомний конфіг і працював як reverse proxy для бекенду.
+## 2026-07-03
+- Перевірено авторизацію через /token
+- CRUD у Journal: створення, оновлення, перегляд
+- Accounts доступні (порожня таблиця)
+- Finance, Inventory, Purchases, Sales, Legal — протестовано створення записів із required-полями
+- CRUD підтверджено для всіх модулів

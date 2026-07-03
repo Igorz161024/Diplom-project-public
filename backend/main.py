@@ -14,6 +14,7 @@ from backend.auth import create_access_token, get_current_user_role
 
 # ✅ Підключаємо роутери
 from backend.routers import (
+    accounts_router,
     journal_router,
     finance_router,
     inventory_router,
@@ -42,6 +43,7 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 # ✅ Підключаємо CRUD‑роутери з префіксами
+app.include_router(accounts_router.router, prefix="/api/accounts", tags=["Accounts"])
 app.include_router(journal_router.router, prefix="/api/journal", tags=["Journal"])
 app.include_router(finance_router.router, prefix="/api/finance", tags=["Finance"])
 app.include_router(inventory_router.router, prefix="/api/inventory", tags=["Inventory"])
